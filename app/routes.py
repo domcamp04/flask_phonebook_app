@@ -2,7 +2,7 @@ from app import app, db
 from flask import render_template, url_for, redirect, flash
 from app.forms import LoginForm, UserInfoForm, EntryForm
 from app.models import Phonebook, User
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 
 
 
@@ -87,13 +87,45 @@ def new_entry():
     return render_template('new_entry.html', form=entry)
 
 
-
-@app.route('/delete_contact/<phonebook_id>', methods=['POST'])
+@app.route('/posts/<int:post_id>/delete', methods=['POST'])
 @login_required
-def delete_contact(phonebook_id):
-    phonebook_id = Phonebook.query.get_or_404(phonebook_id)
+def entry_delete(post_id):
+    entry = Phonebook.query.get_or_404(post_id)
+    if entry.author != current_user:
+        flash('You can only delete your own entries.', 'danger')
+        return redirect(url_for('index'))
 
-    db.session.delete(phonebook_id)
+    db.session.delete(entry)
     db.session.commit()
-    flash('The entry has been deleted', 'success')
-    return redirect(url_for('index'), phonebook_id=phonebook_id)
+
+    flash('Entry has been deleted', 'success')
+    return redirect(url_for('index'))
+
+
+
+@app.route('/index/<int:phonebook_id>/update', methods=['GET', 'POST'])
+@login_required
+def entry_update(phonebook_id):
+    entry = Phonebook.query.get_or_404(phonebook_id)
+    if entry.author.id != current_user.id:
+        flash('That is not your post. You may only edit posts you have created.', 'danger')
+        return redirect(url_for('index'))
+    form = EntryForm()
+    if form.validate_on_submit():
+        new_first_name = form.first_name.data
+        new_last_name = form.last_name.data
+        new_phone = form.phone.data
+        entry.first_name = new_first_name
+        entry.last_name = new_last_name
+        entry.phone = new_phone
+        db.session.commit()
+
+        flash('Your entry has been updated', 'success')
+        return redirect(url_for('index', phonebook_id=Phonebook.id))
+
+    return render_template('post_update.html', entry=entry, form=form)
+
+@app.route('/entry_detail')
+@login_required
+def my_entries():
+    return render_template('entry_detail.html')
