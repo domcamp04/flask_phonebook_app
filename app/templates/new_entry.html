@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Please enter your new phonebook entry:</h1>
+<div class="container">
+    <form action="" autocomplete="off" method="post">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <fieldset>
+                {{ form.first_name.label }}
+                {{ form.first_name(class='form-control', placeholder='First Name') }}
+            </fieldset>
+            <fieldset>
+                {{ form.last_name.label }}
+                {{ form.last_name(class='form-control', placeholder='Last Name') }}
+            </fieldset>
+            <fieldset>
+                {{ form.phone.label }}
+                {{ form.phone(class='form-control', placeholder='Phone Number') }}
+            </fieldset>
+            <fieldset>
+                {{ form.email.label }}
+                {{ form.email(class='form-control', placeholder='Email') }}
+            </fieldset>
+            <fieldset>
+                {{ form.occupation.label }}
+                {{ form.occupation(class='form-control', placeholder='Occupation') }}
+            </fieldset>
+            <fieldset>
+                {{ form.address.label }}
+                {{ form.address(class='form-control', placeholder='Address') }}
+            </fieldset>
+        </div>
+        {{ form.submit(class='btn btn-success', placeholder='Submit Entry') }}
+    </form>
+</div>
+
+{% endblock content %}

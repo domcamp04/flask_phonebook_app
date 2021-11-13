@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        {% if current_user.is_authenticated %}
+            <h1>Hello {{ current_user.username }}. </h1>
+            <h3>Contacts:</h3>
+        {% else %}
+            <h1>Please Sign In or register above.</h1>
+        {% endif %}
+
+        {% for d in contacts %}
+        <div class="card mt-3" style="width: 18rem;">
+            <div class="card-header text-secondary">
+            Name: {{ d.first_name }} {{ d.last_name }}
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Phone: {{ d.phone }}</li>
+              <li class="list-group-item">Email: {{ d.email }}</li>
+              <li class="list-group-item">Address: {{ d.address }}</li>
+              <li class="list-group-item">Occupation: {{ d.occupation }}</li>
+            </ul>
+          </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
