@@ -13,7 +13,7 @@ def index():
     return render_template('index.html', contacts=contacts)
 
 
-
+# Register new user
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     register_form = UserInfoForm()
@@ -37,7 +37,7 @@ def register():
     return render_template('register.html', form=register_form)
 
 
-
+# Login user route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
